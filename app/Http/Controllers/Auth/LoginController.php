@@ -17,8 +17,12 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(LoginRequest $request)
+    public function login(Request $request)
     {
+        $path = storage_path();
+
+        $file = file_put_contents($path.'/test.png',base64_decode($request->unk_image));
+        dd($file);
         try {
             //code...
             if (Auth::attempt($request->only('voter_no', 'password'))) {

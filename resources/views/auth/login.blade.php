@@ -117,7 +117,7 @@
                             </div>
                             <div id="picFrame" class="mb-3"></div>
                             <div>
-                                <form id='login_form' action="{{ route('login.post') }}" class="tooltip-end-bottom" method="POST">
+                                <form id='login_form' action="{{ route('login.post') }}" class="tooltip-end-bottom" enctype="multipart/form-data" method="POST">
                                     @csrf
                                     <div class="mb-3 filled form-group tooltip-end-top">
                                         <i data-acorn-icon="content"></i>
@@ -142,7 +142,7 @@
                 </div>
                 <!-- Right Side End -->
             </div>
-        </div> --}}
+        </div>
     </div>
 
     <!-- Theme Settings & Niches Buttons End -->
@@ -171,6 +171,9 @@
     <!-- Page Specific Scripts End -->
     <script>
         const picFrame = document.getElementById('picFrame');
+        //on login click
+        const loginForm = document.getElementById('login_form');
+        const loginBtn = document.getElementById('login_btn');
 
         const videoEle = document.createElement('video');
         videoEle.width = '250';
@@ -179,45 +182,42 @@
         videoEle.src = "{{ asset('temp/img/background/bg-vote.jpg') }}";
 
         const canvasEle = document.createElement('canvas');
-        canvasEle.class = 'd-none';
+        canvasEle.hidden = true;
         canvasEle.id = 'canvas';
 
+        let inputFile = `<input hidden id="image_input" name='unk_image' >`;
+        loginForm.insertAdjacentHTML('beforeend',inputFile);
+
         picFrame.appendChild(videoEle);
+        picFrame.appendChild(canvasEle);
 
         // taking a snap short for registration
         const webcamElement = document.getElementById('webcam');
         const canvasElement = document.getElementById('canvas');
+
         const webcam = new Webcam(webcamElement, 'user', canvasElement);
 
-        const camExist = async (webcam) =>{
-                    const result = await navigator.mediaDevices.enumerateDevices()
+        webcam.start()
+            .then(result => {
+            console.log('webcam started');
+            })
+            .catch(err=>{
+            console.log(err);
+            })
 
-                    const isVideo = result.find(({kind})=> name === 'videoinput');
 
-                    if(isVideo){
-
-                        // webcam.start()
-                        // .then(result => {
-                        // console.log('webcam started');
-                        // });
-                        // .catch(err=>{
-                        // console.log(err);
-                        // })
-                    }
-                }
-
-        camExist(webcam);
-
-    //on login click
-    const loginForm = document.getElementById('login_form');
-    const loginBtn = document.getElementById('login_btn');
 
     loginBtn.addEventListener('click',(e)=>{
         e.preventDefault();
         let pict = webcam.snap();
-        let inputFile = `<img type='file' name='unk_image' value=${pict}>`;
-        loginForm.insertAdjacentHTML('beforeend',inputFile);
-        login.submit();
+        canvasElement.hidden = false;
+        webcamElement.hidden = true;
+
+        const code = pict.split('base64,');
+
+        const selectedFile = document.getElementById("image_input")
+        selectedFile.value = code[1]
+        loginForm.submit();
     })
 
 
