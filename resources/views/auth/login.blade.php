@@ -56,7 +56,7 @@
             <!-- Left Side Start -->
             <div class="offset-0 col-12 d-none d-lg-flex offset-md-1 col-lg h-lg-100">
                     <div class="min-h-100 d-flex align-items-center">
-        <div class="w-100 w-lg-75 w-xxl-50">
+        {{-- <div class="w-100 w-lg-75 w-xxl-50">
             <div>
                 <div class="mb-5">
                     <h1 class="display-3 text-dark">Multiple Concepts</h1>
@@ -70,7 +70,7 @@
                     <a class="btn btn-lg btn-outline-dark" href="{{ route('login') }}">Learn More</a>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
             </div>
             <!-- Left Side End -->
