@@ -8,8 +8,11 @@ use App\Models\User;
 use App\Models\Voters;
 use App\Models\State;
 use App\Models\LocalGov;
-use Auth;
-use Crypt;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+
+// use Auth;
+// use Crypt;
 
 
 class VotersController extends Controller
