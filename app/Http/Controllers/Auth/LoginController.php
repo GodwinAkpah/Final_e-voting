@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Models\User;
+use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 
@@ -17,15 +18,17 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request,AuthService $authServices)
     {
-        $path = storage_path();
-
-        $file = file_put_contents($path.'/test.png',base64_decode($request->unk_image));
-        dd($file);
         try {
+            $unk_path = storage_path()."{$request->voter_no}.jpg";
+            $k_path = $authServices->getUserPic($request->voter_no);
+            
+            $file = file_put_contents($unk_path ,base64_decode($request->unk_image));
+            $isAuthentic = $authServices->isImageIdentical($k_path,$unk_path);
+
             //code...
-            if (Auth::attempt($request->only('voter_no', 'password'))) {
+            if (Auth::attempt($request->only('voter_no', 'password')) && $isAuthentic) {
                 $user = Auth::user();
                 // dd($user);
                 if($user->hasRole('admin')){

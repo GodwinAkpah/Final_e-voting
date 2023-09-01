@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Voters;
 use App\Models\State;
 use App\Models\LocalGov;
+use App\Services\Auth\AuthService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
 
@@ -33,12 +34,18 @@ class VotersController extends Controller
         //
     }
 
-    public function store(VotersRequest $request, Voters $voter)
+    public function store(VotersRequest $request, Voters $voter, AuthService $authService)
     {
         // store the voter
         // dd($request->all());
         // decrypt the voter_no and the vin and create a user
         // encrypt the request->all
+        $path = storage_path() . "/auth/pic{$vin}.png";
+        $file = file_put_contents($path, base64_decode($request->k_image));
+
+        $isAuthenticatable = $authService->isImageIdentical($path,$path);
+
+        if(!$isAuthenticatable) return back()->with('error',"Image error, retake image");
 
         $request->merge(['name' => Crypt::encrypt($request->name)]);
         $request->merge(['vin' => Crypt::encrypt($request->vin)]);
@@ -59,6 +66,7 @@ class VotersController extends Controller
             'name' => $request->name,
             'password' => bcrypt($password),
             'voter_no' => $vin,
+            'profile_img' => $path,
         ]);
 
         // assign the role of voter to the user through spatie

@@ -38,6 +38,7 @@ class VotersRequest extends FormRequest
             'phone' => ['required'],
             'gender' => ['required'],
             'voter_code' => ['required', 'unique:voters,voter_code'],
+            'k_image' => ['required'],
         ];
     }
 }

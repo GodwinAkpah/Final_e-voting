@@ -28,8 +28,8 @@ class LoginRequest extends FormRequest
 
         return [
             'voter_no' => ['required', 'exists:users,voter_no'],
-
             'password' => ['required', 'min:8', 'max:20'],
+            'unk_image' => ['required'],
         ];
     }
 }
